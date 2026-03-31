@@ -10,6 +10,7 @@ const Dashboard = () => {
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filterDept, setFilterDept] = useState('All');
+  const [filterYear, setFilterYear] = useState('All');
 
   const fetchStudents = async () => {
     try {
@@ -28,11 +29,14 @@ const Dashboard = () => {
     fetchStudents();
   }, []);
 
-  const departments = ['All', ...new Set(students.map(s => s.dept).filter(Boolean))];
+  const departments = ['All', ...new Set(students.map(s => s.dept).filter(Boolean).sort())];
+  const years = ['All', ...new Set(students.map(s => s.year).filter(Boolean).sort())];
 
-  const filteredStudents = filterDept === 'All' 
-    ? students 
-    : students.filter(s => s.dept === filterDept);
+  const filteredStudents = students.filter(s => {
+    const deptMatch = filterDept === 'All' || s.dept === filterDept;
+    const yearMatch = filterYear === 'All' || s.year === filterYear;
+    return deptMatch && yearMatch;
+  });
 
   if (loading && students.length === 0) {
     return (
@@ -80,18 +84,34 @@ const Dashboard = () => {
 
         {/* Filters & Actions */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-          <div className="flex items-center bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-100 w-full md:w-auto">
-            <Filter className="h-5 w-5 text-gray-400 mr-2" />
-            <span className="text-sm font-semibold text-gray-500 mr-3 hidden sm:inline">Filter by Dept:</span>
-            <select 
-              value={filterDept}
-              onChange={(e) => setFilterDept(e.target.value)}
-              className="bg-transparent text-sm font-bold text-gray-700 focus:outline-none cursor-pointer"
-            >
-              {departments.map(dept => (
-                <option key={dept} value={dept}>{dept}</option>
-              ))}
-            </select>
+          <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+            <div className="flex items-center bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-100 flex-1 md:flex-none">
+              <Filter className="h-4 w-4 text-gray-400 mr-2" />
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mr-2 hidden sm:inline">Dept:</span>
+              <select 
+                value={filterDept}
+                onChange={(e) => setFilterDept(e.target.value)}
+                className="bg-transparent text-sm font-bold text-gray-700 focus:outline-none cursor-pointer appearance-none pr-4"
+              >
+                {departments.map(dept => (
+                  <option key={dept} value={dept}>{dept}</option>
+                ))}
+              </select>
+            </div>
+            
+            <div className="flex items-center bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-100 flex-1 md:flex-none">
+              <Calendar className="h-4 w-4 text-gray-400 mr-2" />
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mr-2 hidden sm:inline">Year:</span>
+              <select 
+                value={filterYear}
+                onChange={(e) => setFilterYear(e.target.value)}
+                className="bg-transparent text-sm font-bold text-gray-700 focus:outline-none cursor-pointer appearance-none pr-4"
+              >
+                {years.map(year => (
+                  <option key={year} value={year}>{year}</option>
+                ))}
+              </select>
+            </div>
           </div>
           <div className="text-sm text-gray-500 font-medium italic">
             Showing {filteredStudents.length} of {students.length} students
