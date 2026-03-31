@@ -139,15 +139,15 @@ const Dashboard = () => {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th scope="col" className="px-8 py-5 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">Rank</th>
-                  <th scope="col" className="px-6 py-5 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">Student</th>
-                  <th scope="col" className="px-6 py-5 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">Roll No</th>
-                  <th scope="col" className="px-6 py-5 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">Dept</th>
-                  <th scope="col" className="px-6 py-5 text-center text-xs font-bold text-gray-400 uppercase tracking-widest">Total Solved</th>
-                  <th scope="col" className="px-4 py-5 text-center text-xs font-bold text-green-600 uppercase tracking-widest">Easy</th>
-                  <th scope="col" className="px-4 py-5 text-center text-xs font-bold text-yellow-600 uppercase tracking-widest">Medium</th>
-                  <th scope="col" className="px-4 py-5 text-center text-xs font-bold text-red-600 uppercase tracking-widest">Hard</th>
-                  <th scope="col" className="px-8 py-5 text-right text-xs font-bold text-gray-400 uppercase tracking-widest">Action</th>
+                  <th scope="col" className="px-4 py-4 sm:px-8 sm:py-5 text-left text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-widest">Rank</th>
+                  <th scope="col" className="px-4 py-4 sm:px-6 sm:py-5 text-left text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-widest">Student</th>
+                  <th scope="col" className="hidden sm:table-cell px-6 py-5 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">Roll No</th>
+                  <th scope="col" className="hidden lg:table-cell px-6 py-5 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">Dept</th>
+                  <th scope="col" className="px-4 py-4 sm:px-6 sm:py-5 text-center text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-widest">Solved</th>
+                  <th scope="col" className="hidden sm:table-cell px-4 py-5 text-center text-xs font-bold text-green-600 uppercase tracking-widest">Easy</th>
+                  <th scope="col" className="hidden sm:table-cell px-4 py-5 text-center text-xs font-bold text-yellow-600 uppercase tracking-widest">Medium</th>
+                  <th scope="col" className="hidden sm:table-cell px-4 py-5 text-center text-xs font-bold text-red-600 uppercase tracking-widest">Hard</th>
+                  <th scope="col" className="px-4 py-4 sm:px-8 sm:py-5 text-right text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-widest">Action</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-100">
@@ -157,9 +157,9 @@ const Dashboard = () => {
                   const stats = student.latestStats || { totalSolved: 0, easy: 0, medium: 0, hard: 0 };
                   
                   return (
-                    <tr key={student._id} className="hover:bg-indigo-50/30 transition-all duration-300">
-                      <td className="px-8 py-6 whitespace-nowrap">
-                        <span className={`inline-flex items-center justify-center h-8 w-8 rounded-full text-sm font-black ${
+                    <tr key={student._id} className="hover:bg-indigo-50/30 transition-all duration-300 border-b border-gray-50 last:border-0">
+                      <td className="px-4 py-4 sm:px-8 sm:py-6 whitespace-nowrap">
+                        <span className={`inline-flex items-center justify-center h-7 w-7 sm:h-8 sm:w-8 rounded-full text-xs sm:text-sm font-black ${
                           index === 0 ? 'bg-yellow-100 text-yellow-700' : 
                           index === 1 ? 'bg-gray-100 text-gray-700' : 
                           index === 2 ? 'bg-orange-100 text-orange-700' : 'text-gray-400'
@@ -167,46 +167,46 @@ const Dashboard = () => {
                           {index + 1}
                         </span>
                       </td>
-                      <td className="px-6 py-6 whitespace-nowrap">
+                      <td className="px-4 py-4 sm:px-6 sm:py-6 whitespace-nowrap">
                         <div className="flex items-center">
-                          <div className="h-10 w-10 flex-shrink-0 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-700 font-bold">
+                          <div className="h-8 w-8 sm:h-10 sm:w-10 flex-shrink-0 bg-indigo-100 rounded-lg sm:rounded-full flex items-center justify-center text-indigo-700 font-bold text-xs sm:text-base">
                             {student.name.charAt(0)}
                           </div>
-                          <div className="ml-4">
-                            <div className="text-base font-bold text-gray-900 leading-none">{student.name}</div>
-                            <div className="text-xs text-indigo-500 font-medium mt-1">@{student.leetcodeUsername}</div>
+                          <div className="ml-3 sm:ml-4">
+                            <div className="text-sm sm:text-base font-bold text-gray-900 leading-none">{student.name}</div>
+                            <div className="text-[10px] sm:text-xs text-indigo-500 font-medium mt-1">@{student.leetcodeUsername}</div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-6 whitespace-nowrap text-sm font-medium text-gray-500">
+                      <td className="hidden sm:table-cell px-6 py-6 whitespace-nowrap text-sm font-medium text-gray-500">
                         {student.rollNo}
                       </td>
-                      <td className="px-6 py-6 whitespace-nowrap">
+                      <td className="hidden lg:table-cell px-6 py-6 whitespace-nowrap">
                         <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded text-[10px] font-bold uppercase tracking-wider">
                           {student.dept || 'N/A'}
                         </span>
                       </td>
-                      <td className="px-6 py-6 whitespace-nowrap text-center">
-                        <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-lg text-lg font-black italic">
+                      <td className="px-4 py-4 sm:px-6 sm:py-6 whitespace-nowrap text-center">
+                        <span className="px-2 py-0.5 sm:px-3 sm:py-1 bg-indigo-100 text-indigo-700 rounded-lg text-sm sm:text-lg font-black italic">
                           {stats.totalSolved}
                         </span>
                       </td>
-                      <td className="px-4 py-6 whitespace-nowrap text-center text-sm text-green-600 font-black">
+                      <td className="hidden sm:table-cell px-4 py-6 whitespace-nowrap text-center text-sm text-green-600 font-black">
                         {stats.easy}
                       </td>
-                      <td className="px-4 py-6 whitespace-nowrap text-center text-sm text-yellow-600 font-black">
+                      <td className="hidden sm:table-cell px-4 py-6 whitespace-nowrap text-center text-sm text-yellow-600 font-black">
                         {stats.medium}
                       </td>
-                      <td className="px-4 py-6 whitespace-nowrap text-center text-sm text-red-600 font-black">
+                      <td className="hidden sm:table-cell px-4 py-6 whitespace-nowrap text-center text-sm text-red-600 font-black">
                         {stats.hard}
                       </td>
-                      <td className="px-8 py-6 whitespace-nowrap text-right">
+                      <td className="px-4 py-4 sm:px-8 sm:py-6 whitespace-nowrap text-right">
                         <Link 
                           to={`/student/${student._id}`} 
-                          className="inline-flex items-center px-4 py-2 border border-gray-200 text-sm font-bold rounded-xl text-indigo-600 bg-white hover:bg-indigo-600 hover:text-white hover:border-indigo-600 shadow-sm transition-all duration-300"
+                          className="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 border border-gray-200 text-[10px] sm:text-sm font-bold rounded-lg sm:rounded-xl text-indigo-600 bg-white hover:bg-indigo-600 hover:text-white hover:border-indigo-600 shadow-sm transition-all duration-300"
                         >
-                          Details 
-                          <ExternalLink className="ml-2 h-4 w-4" />
+                          <span className="hidden sm:inline">Details</span>
+                          <ExternalLink className="sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                         </Link>
                       </td>
                     </tr>
@@ -214,7 +214,7 @@ const Dashboard = () => {
                 })}
                 {students.length === 0 && (
                   <tr>
-                    <td colSpan="8" className="px-6 py-20 text-center">
+                    <td colSpan="9" className="px-6 py-20 text-center">
                       <div className="flex flex-col items-center">
                         <Users className="h-12 w-12 text-gray-300 mb-4" />
                         <p className="text-xl font-bold text-gray-400">No students yet</p>

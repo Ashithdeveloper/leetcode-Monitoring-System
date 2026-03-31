@@ -23,6 +23,7 @@ api.interceptors.request.use(
 export const getStudents = () => api.get('/students');
 export const getStudentById = (id) => api.get(`/students/${id}`);
 export const addStudent = (studentData) => api.post('/students/add', studentData);
+export const deleteStudent = (id) => api.delete(`/students/${id}`);
 
 // Auth endpoints
 export const loginAdmins = (username, password) => api.post('/auth/login', { username, password });

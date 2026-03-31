@@ -80,7 +80,7 @@ const AddStudentModal = ({ isOpen, onClose, onSuccess }) => {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
               <label className="text-sm font-semibold text-gray-700 flex items-center">
                 <Hash size={16} className="mr-2 text-indigo-500" />

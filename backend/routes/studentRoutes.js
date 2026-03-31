@@ -1,5 +1,4 @@
-import express from 'express';
-import { addStudent, getAllStudents, getStudentById } from '../controllers/studentController.js';
+import { addStudent, getAllStudents, getStudentById, deleteStudent } from '../controllers/studentController.js';
 import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -12,5 +11,8 @@ router.get('/:id', getStudentById);
 
 // Add a student (Protected)
 router.post('/add', protect, addStudent);
+
+// Delete a student (Protected)
+router.delete('/:id', protect, deleteStudent);
 
 export default router;

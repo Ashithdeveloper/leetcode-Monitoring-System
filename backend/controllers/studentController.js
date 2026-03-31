@@ -12,6 +12,8 @@ export const addStudent = async (req, res) => {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
+  console.log(`Adding student: ${name}, Roll: ${rollNo}, Dept: ${dept}`);
+
   try {
     // Check if student already exists
     const existingStudent = await Student.findOne({ rollNo });
@@ -105,5 +107,24 @@ export const getStudentById = async (req, res) => {
   } catch (error) {
     console.error(`Error fetching student ${id}:`, error);
     res.status(500).json({ error: 'Server error retrieving student' });
+  }
+};
+
+/**
+ * Delete a student
+ */
+export const deleteStudent = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const student = await Student.findByIdAndDelete(id);
+    if (!student) {
+      return res.status(404).json({ error: 'Student not found' });
+    }
+
+    res.status(200).json({ message: 'Student deleted successfully' });
+  } catch (error) {
+    console.error(`Error deleting student ${id}:`, error);
+    res.status(500).json({ error: 'Server error deleting student' });
   }
 };

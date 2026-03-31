@@ -13,7 +13,7 @@ const Login = () => {
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     if (userInfo) {
       if (userInfo.mustChangePassword) {
-        navigate('/change-password');
+        navigate('/');
       } else {
         navigate('/');
       }
@@ -29,7 +29,7 @@ const Login = () => {
       const { data } = await loginAdmins(username, password);
       console.log('Login response data:', data);
       localStorage.setItem('userInfo', JSON.stringify(data));
-      
+
       if (data.mustChangePassword) {
         console.log('Redirecting to change-password');
         navigate('/change-password');
@@ -88,9 +88,8 @@ const Login = () => {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-3 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-bold shadow-lg hover:shadow-indigo-500/30 hover:-translate-y-0.5 transition-all active:scale-95 ${
-              loading ? 'opacity-70 cursor-not-allowed' : ''
-            }`}
+            className={`w-full py-3 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-bold shadow-lg hover:shadow-indigo-500/30 hover:-translate-y-0.5 transition-all active:scale-95 ${loading ? 'opacity-70 cursor-not-allowed' : ''
+              }`}
           >
             {loading ? (
               <span className="flex items-center justify-center">
