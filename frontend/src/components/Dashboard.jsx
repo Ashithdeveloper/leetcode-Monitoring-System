@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api, { getStudents } from '../api';
-import { ExternalLink, UserPlus, Trophy, Users, Award, Filter, Building2 } from 'lucide-react';
+import { ExternalLink, UserPlus, Trophy, Users, Award, Filter, Building2, Calendar } from 'lucide-react';
 import AddStudentModal from './AddStudentModal';
 
 const Dashboard = () => {
