@@ -20,7 +20,14 @@ app.use('/api/students', studentRoutes);
 app.use('/api/auth', authRoutes);
 
 // Database Connection
-mongoose.connect(process.env.MONGO_URI)
+const mongoURI = process.env.MONGO_URI;
+
+if (!mongoURI) {
+  console.error('CRITICAL ERROR: MONGO_URI is not defined in environment variables.');
+  process.exit(1);
+}
+
+mongoose.connect(mongoURI)
 .then(async () => {
   console.log('Connected to MongoDB');
   // Seed initial super admin if none exist
