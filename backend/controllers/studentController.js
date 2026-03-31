@@ -6,9 +6,9 @@ import { extractUsername, fetchLeetCodeStats } from '../utils/leetcode.js';
  * Extract username from leetcode link, fetch initial stats, and save
  */
 export const addStudent = async (req, res) => {
-  const { name, rollNo, year, leetcodeLink } = req.body;
+  const { name, rollNo, year, dept, leetcodeLink } = req.body;
 
-  if (!name || !rollNo || !year || !leetcodeLink) {
+  if (!name || !rollNo || !year || !dept || !leetcodeLink) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
@@ -39,6 +39,7 @@ export const addStudent = async (req, res) => {
       name,
       rollNo,
       year,
+      dept,
       leetcode: { username },
       history: [stats]
     });
@@ -74,6 +75,7 @@ export const getAllStudents = async (req, res) => {
         name: student.name,
         rollNo: student.rollNo,
         year: student.year,
+        dept: student.dept,
         leetcodeUsername: student.leetcode.username,
         latestStats: latestStats
       };

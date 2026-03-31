@@ -12,6 +12,7 @@ const StudentSchema = new mongoose.Schema({
   name: { type: String, required: true },
   rollNo: { type: String, required: true, unique: true },
   year: { type: String, required: true },
+  dept: { type: String, required: true },
   leetcode: {
     username: { type: String, required: true }
   },

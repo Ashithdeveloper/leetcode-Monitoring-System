@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api, { getStudents } from '../api';
-import { ExternalLink, UserPlus, Trophy, Users, Award } from 'lucide-react';
+import { ExternalLink, UserPlus, Trophy, Users, Award, Filter, Building2 } from 'lucide-react';
 import AddStudentModal from './AddStudentModal';
 
 const Dashboard = () => {
@@ -9,6 +9,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [filterDept, setFilterDept] = useState('All');
 
   const fetchStudents = async () => {
     try {
@@ -26,6 +27,12 @@ const Dashboard = () => {
   useEffect(() => {
     fetchStudents();
   }, []);
+
+  const departments = ['All', ...new Set(students.map(s => s.dept).filter(Boolean))];
+
+  const filteredStudents = filterDept === 'All' 
+    ? students 
+    : students.filter(s => s.dept === filterDept);
 
   if (loading && students.length === 0) {
     return (
@@ -69,6 +76,26 @@ const Dashboard = () => {
             <UserPlus className="mr-2 h-5 w-5" />
             Add New Student
           </button>
+        </div>
+
+        {/* Filters & Actions */}
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+          <div className="flex items-center bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-100 w-full md:w-auto">
+            <Filter className="h-5 w-5 text-gray-400 mr-2" />
+            <span className="text-sm font-semibold text-gray-500 mr-3 hidden sm:inline">Filter by Dept:</span>
+            <select 
+              value={filterDept}
+              onChange={(e) => setFilterDept(e.target.value)}
+              className="bg-transparent text-sm font-bold text-gray-700 focus:outline-none cursor-pointer"
+            >
+              {departments.map(dept => (
+                <option key={dept} value={dept}>{dept}</option>
+              ))}
+            </select>
+          </div>
+          <div className="text-sm text-gray-500 font-medium italic">
+            Showing {filteredStudents.length} of {students.length} students
+          </div>
         </div>
 
         {/* Stats Overview */}
@@ -115,6 +142,7 @@ const Dashboard = () => {
                   <th scope="col" className="px-8 py-5 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">Rank</th>
                   <th scope="col" className="px-6 py-5 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">Student</th>
                   <th scope="col" className="px-6 py-5 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">Roll No</th>
+                  <th scope="col" className="px-6 py-5 text-left text-xs font-bold text-gray-400 uppercase tracking-widest">Dept</th>
                   <th scope="col" className="px-6 py-5 text-center text-xs font-bold text-gray-400 uppercase tracking-widest">Total Solved</th>
                   <th scope="col" className="px-4 py-5 text-center text-xs font-bold text-green-600 uppercase tracking-widest">Easy</th>
                   <th scope="col" className="px-4 py-5 text-center text-xs font-bold text-yellow-600 uppercase tracking-widest">Medium</th>
@@ -123,7 +151,7 @@ const Dashboard = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-100">
-                {students
+                {filteredStudents
                   .sort((a, b) => (b.latestStats?.totalSolved || 0) - (a.latestStats?.totalSolved || 0))
                   .map((student, index) => {
                   const stats = student.latestStats || { totalSolved: 0, easy: 0, medium: 0, hard: 0 };
@@ -152,6 +180,11 @@ const Dashboard = () => {
                       </td>
                       <td className="px-6 py-6 whitespace-nowrap text-sm font-medium text-gray-500">
                         {student.rollNo}
+                      </td>
+                      <td className="px-6 py-6 whitespace-nowrap">
+                        <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded text-[10px] font-bold uppercase tracking-wider">
+                          {student.dept || 'N/A'}
+                        </span>
                       </td>
                       <td className="px-6 py-6 whitespace-nowrap text-center">
                         <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-lg text-lg font-black italic">

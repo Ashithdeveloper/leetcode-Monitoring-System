@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, User, Calendar, ExternalLink } from 'lucide-react';
+import { ArrowLeft, User, Calendar, ExternalLink, Building2 } from 'lucide-react';
 import api from '../api';
 
 const StudentDetail = () => {
@@ -66,6 +66,7 @@ const StudentDetail = () => {
               </h3>
               <p className="mt-1 max-w-2xl text-sm text-gray-500 flex items-center">
                 Roll No: <span className="font-semibold text-gray-700 ml-1 mr-4">{student.rollNo}</span>
+                Dept: <span className="font-semibold text-gray-700 ml-1 mr-4 uppercase">{student.dept || 'N/A'}</span>
                 Batch Year: <span className="font-semibold text-gray-700 ml-1">{student.year}</span>
               </p>
             </div>

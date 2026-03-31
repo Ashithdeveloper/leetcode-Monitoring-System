@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, User, Hash, Calendar, Link as LinkIcon, Loader2 } from 'lucide-react';
+import { X, User, Hash, Calendar, Link as LinkIcon, Loader2, Building2 } from 'lucide-react';
 import { addStudent } from '../api';
 
 const AddStudentModal = ({ isOpen, onClose, onSuccess }) => {
@@ -7,6 +7,7 @@ const AddStudentModal = ({ isOpen, onClose, onSuccess }) => {
     name: '',
     rollNo: '',
     year: '',
+    dept: '',
     leetcodeLink: ''
   });
   const [loading, setLoading] = useState(false);
@@ -32,6 +33,7 @@ const AddStudentModal = ({ isOpen, onClose, onSuccess }) => {
         name: '',
         rollNo: '',
         year: '',
+        dept: '',
         leetcodeLink: ''
       });
     } catch (err) {
@@ -109,6 +111,22 @@ const AddStudentModal = ({ isOpen, onClose, onSuccess }) => {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all placeholder:text-gray-400"
               />
             </div>
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-sm font-semibold text-gray-700 flex items-center">
+              <Building2 size={16} className="mr-2 text-indigo-500" />
+              Department
+            </label>
+            <input 
+              type="text" 
+              name="dept"
+              required
+              value={formData.dept}
+              onChange={handleChange}
+              placeholder="e.g. CSE, ECE, IT"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all placeholder:text-gray-400"
+            />
           </div>
 
           <div className="space-y-1">
