@@ -28,5 +28,6 @@ export const addStudent = (studentData) => api.post('/students/add', studentData
 export const loginAdmins = (username, password) => api.post('/auth/login', { username, password });
 export const registerAdmin = (adminData) => api.post('/auth/register-admin', adminData);
 export const getAdmins = () => api.get('/auth/admins');
+export const updatePassword = (newPassword) => api.post('/auth/update-password', { newPassword });
 
 export default api;

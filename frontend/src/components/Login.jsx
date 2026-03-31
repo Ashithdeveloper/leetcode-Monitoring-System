@@ -12,7 +12,11 @@ const Login = () => {
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     if (userInfo) {
-      navigate('/');
+      if (userInfo.mustChangePassword) {
+        navigate('/change-password');
+      } else {
+        navigate('/');
+      }
     }
   }, [navigate]);
 
@@ -23,8 +27,16 @@ const Login = () => {
 
     try {
       const { data } = await loginAdmins(username, password);
+      console.log('Login response data:', data);
       localStorage.setItem('userInfo', JSON.stringify(data));
-      navigate('/');
+      
+      if (data.mustChangePassword) {
+        console.log('Redirecting to change-password');
+        navigate('/change-password');
+      } else {
+        console.log('Redirecting to dashboard');
+        navigate('/');
+      }
     } catch (err) {
       setError(err.response?.data?.message || 'Invalid username or password');
     } finally {

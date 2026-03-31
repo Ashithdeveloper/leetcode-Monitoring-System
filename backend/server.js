@@ -26,12 +26,20 @@ mongoose.connect(process.env.MONGO_URI)
   // Seed initial super admin if none exist
   const adminCount = await Admin.countDocuments();
   if (adminCount === 0) {
-    const superAdmin = await Admin.create({
-      username: 'superadmin',
-      password: 'password123',
-      role: 'superadmin',
-    });
-    console.log('Seed: Initial Super Admin created (superadmin/password123)');
+    const username = process.env.SUPERADMIN_USERNAME;
+    const password = process.env.SUPERADMIN_PASSWORD;
+
+    if (username && password) {
+      const superAdmin = await Admin.create({
+        username,
+        password,
+        role: 'superadmin',
+        mustChangePassword: true,
+      });
+      console.log(`Seed: Initial Super Admin '${username}' created from .env`);
+    } else {
+      console.warn('Seed: Skipping admin creation. SUPERADMIN_USERNAME or SUPERADMIN_PASSWORD missing in .env');
+    }
   }
   
   // Start the daily cron job after successful DB connection

@@ -4,6 +4,7 @@ import Dashboard from './components/Dashboard';
 import StudentDetail from './components/StudentDetail';
 import Login from './components/Login';
 import AdminManagement from './components/AdminManagement';
+import ChangePassword from './components/ChangePassword';
 
 const ProtectedRoute = ({ children }) => {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
@@ -85,6 +86,11 @@ function App() {
             <Route path="/admin-management" element={
               <ProtectedRoute>
                 <AdminManagement />
+              </ProtectedRoute>
+            } />
+            <Route path="/change-password" element={
+              <ProtectedRoute>
+                <ChangePassword />
               </ProtectedRoute>
             } />
             <Route path="*" element={<Navigate to="/" replace />} />

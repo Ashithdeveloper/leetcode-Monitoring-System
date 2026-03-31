@@ -25,10 +25,33 @@ router.post('/login', async (req, res) => {
         _id: admin._id,
         username: admin.username,
         role: admin.role,
+        mustChangePassword: admin.mustChangePassword,
         token: generateToken(admin._id),
       });
     } else {
       res.status(401).json({ message: 'Invalid username or password' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @desc    Update admin password
+// @route   POST /api/auth/update-password
+// @access  Private
+router.post('/update-password', protect, async (req, res) => {
+  const { newPassword } = req.body;
+
+  try {
+    const admin = await Admin.findById(req.user._id);
+
+    if (admin) {
+      admin.password = newPassword;
+      admin.mustChangePassword = false;
+      await admin.save();
+      res.json({ message: 'Password updated successfully' });
+    } else {
+      res.status(404).json({ message: 'Admin not found' });
     }
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
