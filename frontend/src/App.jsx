@@ -38,7 +38,14 @@ const NavBar = () => {
             <div className="hidden md:flex items-center space-x-1">
               <Link to="/" className="px-4 py-2 text-sm font-bold text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all">Dashboard</Link>
               {userInfo.role === 'superadmin' && (
-                <Link to="/admin-management" className="px-4 py-2 text-sm font-bold text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all">Teams</Link>
+                <>
+                  <Link to="/admin-management" className="px-4 py-2 text-sm font-bold text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all">Teams</Link>
+                  <Link to="/change-password" title="Change Password" data-tooltip-id="change-password-tooltip" className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                    </svg>
+                  </Link>
+                </>
               )}
             </div>
           </div>
@@ -90,7 +97,11 @@ function App() {
             } />
             <Route path="/change-password" element={
               <ProtectedRoute>
-                <ChangePassword />
+                {JSON.parse(localStorage.getItem('userInfo'))?.role === 'superadmin' ? (
+                  <ChangePassword />
+                ) : (
+                  <Navigate to="/" replace />
+                )}
               </ProtectedRoute>
             } />
             <Route path="*" element={<Navigate to="/" replace />} />

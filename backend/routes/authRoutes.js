@@ -39,7 +39,7 @@ router.post('/login', async (req, res) => {
 // @desc    Update admin password
 // @route   POST /api/auth/update-password
 // @access  Private
-router.post('/update-password', protect, async (req, res) => {
+router.post('/update-password', protect, isSuperAdmin, async (req, res) => {
   const { newPassword } = req.body;
 
   try {

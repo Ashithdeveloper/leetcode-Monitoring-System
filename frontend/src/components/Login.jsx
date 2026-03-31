@@ -30,13 +30,8 @@ const Login = () => {
       console.log('Login response data:', data);
       localStorage.setItem('userInfo', JSON.stringify(data));
 
-      if (data.mustChangePassword) {
-        console.log('Redirecting to change-password');
-        navigate('/change-password');
-      } else {
-        console.log('Redirecting to dashboard');
-        navigate('/');
-      }
+      console.log('Redirecting to dashboard');
+      navigate('/');
     } catch (err) {
       setError(err.response?.data?.message || 'Invalid username or password');
     } finally {
