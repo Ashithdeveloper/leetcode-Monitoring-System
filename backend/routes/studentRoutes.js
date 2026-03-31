@@ -1,3 +1,4 @@
+import express from 'express';
 import { addStudent, getAllStudents, getStudentById, deleteStudent } from '../controllers/studentController.js';
 import { protect } from '../middleware/auth.js';
 
