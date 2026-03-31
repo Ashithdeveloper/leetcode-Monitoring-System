@@ -1,14 +1,16 @@
 import express from 'express';
-const router = express.Router();
 import { addStudent, getAllStudents, getStudentById } from '../controllers/studentController.js';
+import { protect } from '../middleware/auth.js';
 
-// Add a student
-router.post('/add', addStudent);
+const router = express.Router();
 
-// Get all students with latest stats
+// Get all students with latest stats (Public for now, can be protected)
 router.get('/', getAllStudents);
 
-// Get a single student by ID with 7-day history
+// Get a single student by ID with 7-day history (Public for now)
 router.get('/:id', getStudentById);
+
+// Add a student (Protected)
+router.post('/add', protect, addStudent);
 
 export default router;
