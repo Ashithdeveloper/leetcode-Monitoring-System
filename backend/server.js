@@ -7,6 +7,7 @@ import studentRoutes from './routes/studentRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import Admin from './models/Admin.js';
 import startDailyCron from './jobs/cron.js';
+import startPingJob from './jobs/ping.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -51,6 +52,9 @@ mongoose.connect(mongoURI)
   
   // Start the daily cron job after successful DB connection
   startDailyCron();
+  
+  // Start the keep-alive ping job
+  startPingJob();
   
   // Start Express server
   app.listen(PORT, () => {
