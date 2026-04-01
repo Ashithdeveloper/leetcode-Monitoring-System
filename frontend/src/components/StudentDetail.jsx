@@ -76,53 +76,59 @@ const StudentDetail = () => {
         </div>
         
         {/* Student Profile Card */}
-        <div className="bg-white shadow-xl overflow-hidden rounded-3xl mb-8 border border-gray-100">
-          <div className="px-6 py-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full">
-              <div className="h-16 w-16 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600">
-                <User size={32} strokeWidth={2.5} />
+        <div className="bg-white shadow-xl overflow-hidden rounded-3xl mb-10 border border-gray-100">
+          <div className="px-6 py-10 flex flex-col md:flex-row justify-between items-stretch md:items-center gap-8">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-6 w-full">
+              <div className="h-24 w-24 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl flex items-center justify-center text-white shadow-lg shadow-indigo-200 transform transition-transform hover:rotate-3">
+                <User size={48} strokeWidth={2.5} />
               </div>
-              <div className="flex-1">
-                <h3 className="text-3xl font-black text-gray-900 tracking-tight">
-                  {student.name}
-                </h3>
-                <div className="mt-2 flex flex-wrap gap-y-2 gap-x-4 text-sm font-semibold text-gray-500 uppercase tracking-wider">
-                  <div className="flex items-center bg-gray-50 px-2 py-1 rounded-lg">
-                    <Hash size={14} className="mr-1.5 text-indigo-400" />
-                    {student.rollNo}
+              <div className="flex-1 space-y-4">
+                <div>
+                  <h3 className="text-4xl font-black text-gray-900 tracking-tight leading-none">
+                    {student.name}
+                  </h3>
+                  <div className="mt-2 text-indigo-500 font-black text-sm uppercase tracking-[0.2em]">
+                    @{student.leetcode.username}
                   </div>
-                  <div className="flex items-center bg-gray-50 px-2 py-1 rounded-lg">
-                    <Building2 size={14} className="mr-1.5 text-indigo-400" />
-                    {student.dept || 'N/A'}
+                </div>
+                
+                <div className="flex flex-wrap justify-center sm:justify-start gap-2">
+                  <div className="inline-flex items-center bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-100 shadow-sm">
+                    <Hash size={14} className="mr-2 text-indigo-400" />
+                    <span className="text-xs font-black text-gray-600">{student.rollNo}</span>
                   </div>
-                  <div className="flex items-center bg-gray-50 px-2 py-1 rounded-lg">
-                    <Calendar size={14} className="mr-1.5 text-indigo-400" />
-                    {student.year}
+                  <div className="inline-flex items-center bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-100 shadow-sm">
+                    <Building2 size={14} className="mr-2 text-indigo-400" />
+                    <span className="text-xs font-black text-gray-600">{student.dept || 'N/A'}</span>
+                  </div>
+                  <div className="inline-flex items-center bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-100 shadow-sm">
+                    <Calendar size={14} className="mr-2 text-indigo-400" />
+                    <span className="text-xs font-black text-gray-600">Year {student.year}</span>
                   </div>
                 </div>
               </div>
             </div>
             
-            <div className="flex flex-row md:flex-col lg:flex-row gap-3 w-full md:w-auto">
+            <div className="flex flex-col sm:flex-row md:flex-col lg:flex-row gap-4 w-full md:w-auto">
               <a 
                 href={`https://leetcode.com/${student.leetcode.username}`} 
                 target="_blank" 
                 rel="noreferrer"
-                className="flex-1 md:flex-none inline-flex items-center justify-center px-5 py-3 border border-gray-200 shadow-sm text-sm font-bold rounded-2xl text-gray-700 bg-white hover:bg-gray-50 transition-all active:scale-95"
+                className="flex-1 md:flex-none inline-flex items-center justify-center px-8 py-4 border-2 border-indigo-50 shadow-sm text-sm font-black rounded-2xl text-indigo-600 bg-white hover:bg-indigo-50 transition-all active:scale-95 group"
               >
-                Profile <ExternalLink className="ml-2 h-4 w-4 text-gray-400" />
+                LeetCode Profile <ExternalLink className="ml-2 h-4 w-4 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
               </a>
               <button 
                 onClick={handleDelete}
                 disabled={deleting}
-                className="flex-1 md:flex-none inline-flex items-center justify-center px-5 py-3 border border-transparent text-sm font-bold rounded-2xl text-white bg-red-500 hover:bg-red-600 shadow-lg shadow-red-100 transition-all active:scale-95 disabled:opacity-50"
+                className="flex-1 md:flex-none inline-flex items-center justify-center px-8 py-4 border border-transparent text-sm font-black rounded-2xl text-white bg-red-500 hover:bg-red-600 shadow-xl shadow-red-100 transition-all active:scale-95 disabled:opacity-50"
               >
                 {deleting ? (
-                  <Loader2 className="animate-spin h-4 w-4" />
+                  <Loader2 className="animate-spin h-5 w-5" />
                 ) : (
                   <>
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    Delete
+                    <Trash2 className="mr-2 h-5 w-5" />
+                    Delete Student
                   </>
                 )}
               </button>
@@ -130,42 +136,47 @@ const StudentDetail = () => {
           </div>
         </div>
 
-        {/* 7-Day Performance Table */}
-        <div className="bg-white shadow-sm overflow-hidden sm:rounded-lg border border-gray-200">
-          <div className="px-4 py-5 sm:px-6 border-b border-gray-200 bg-gray-50 flex items-center space-x-2">
-            <Calendar className="h-5 w-5 text-indigo-500" />
-            <h3 className="text-lg leading-6 font-semibold text-gray-900">
-              7-Day Performance History
-            </h3>
+        {/* 7-Day Performance History */}
+        <div className="bg-white shadow-xl overflow-hidden rounded-3xl border border-gray-100">
+          <div className="px-8 py-6 border-b border-gray-50 bg-gray-50/50 flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-indigo-100 text-indigo-600 rounded-xl">
+                <Calendar className="h-5 w-5" />
+              </div>
+              <h3 className="text-xl font-black text-gray-900 tracking-tight">
+                7-Day performance
+              </h3>
+            </div>
+            <div className="hidden sm:block text-[10px] font-black text-gray-400 uppercase tracking-widest">
+              Last 7 log points
+            </div>
           </div>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+
+          <div className="hidden md:block overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-100">
               <thead className="bg-white">
                 <tr>
-                  <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <th scope="col" className="px-8 py-5 text-left text-xs font-black text-gray-400 uppercase tracking-widest">
                     Date Logged
                   </th>
-                  <th scope="col" className="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider font-bold">
+                  <th scope="col" className="px-8 py-5 text-center text-xs font-black text-indigo-600 uppercase tracking-widest">
                     Total Solved
                   </th>
-                  <th scope="col" className="px-6 py-4 text-center text-xs font-semibold text-green-600 uppercase tracking-wider">
+                  <th scope="col" className="px-8 py-5 text-center text-xs font-black text-green-600 uppercase tracking-widest">
                     Easy
                   </th>
-                  <th scope="col" className="px-6 py-4 text-center text-xs font-semibold text-yellow-600 uppercase tracking-wider">
+                  <th scope="col" className="px-8 py-5 text-center text-xs font-black text-yellow-600 uppercase tracking-widest">
                     Medium
                   </th>
-                  <th scope="col" className="px-6 py-4 text-center text-xs font-semibold text-red-600 uppercase tracking-wider">
+                  <th scope="col" className="px-8 py-5 text-center text-xs font-black text-red-600 uppercase tracking-widest">
                     Hard
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-100">
+              <tbody className="bg-white divide-y divide-gray-50">
                 {student.history && student.history.length > 0 ? (
-                  // Map through history array (newest to oldest or as retrieved)
-                  // usually history is oldest to newest, let's reverse to show latest at top
                   [...student.history].reverse().map((entry, index) => {
                     const date = new Date(entry.date).toLocaleDateString(undefined, {
-                      year: 'numeric',
                       month: 'short',
                       day: 'numeric',
                       hour: '2-digit',
@@ -173,20 +184,22 @@ const StudentDetail = () => {
                     });
 
                     return (
-                      <tr key={entry._id || index} className="hover:bg-gray-50 transition-colors duration-200">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      <tr key={entry._id || index} className="hover:bg-indigo-50/30 transition-all duration-300">
+                        <td className="px-8 py-6 whitespace-nowrap text-sm font-black text-gray-900">
                           {date}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-bold text-gray-800">
-                          {entry.totalSolved}
+                        <td className="px-8 py-6 whitespace-nowrap text-center">
+                          <span className="px-4 py-1 bg-indigo-50 text-indigo-700 rounded-xl text-lg font-black italic">
+                            {entry.totalSolved}
+                          </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-green-600 font-medium">
+                        <td className="px-8 py-6 whitespace-nowrap text-center text-sm text-green-600 font-black">
                           {entry.easy}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-yellow-600 font-medium">
+                        <td className="px-8 py-6 whitespace-nowrap text-center text-sm text-yellow-600 font-black">
                           {entry.medium}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-red-600 font-medium">
+                        <td className="px-8 py-6 whitespace-nowrap text-center text-sm text-red-600 font-black">
                           {entry.hard}
                         </td>
                       </tr>
@@ -194,13 +207,61 @@ const StudentDetail = () => {
                   })
                 ) : (
                   <tr>
-                    <td colSpan="5" className="px-6 py-12 text-center text-gray-500 text-sm">
-                      No performance history available.
+                    <td colSpan="5" className="px-6 py-20 text-center">
+                      <div className="flex flex-col items-center">
+                        <div className="p-4 bg-gray-50 rounded-3xl mb-4">
+                          <Calendar className="h-10 w-10 text-gray-200" />
+                        </div>
+                        <p className="text-gray-400 font-black uppercase tracking-widest text-sm">No activity records yet</p>
+                      </div>
                     </td>
                   </tr>
                 )}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile History Cards */}
+          <div className="md:hidden p-4 space-y-4 bg-gray-50/50">
+            {student.history && student.history.length > 0 ? (
+              [...student.history].reverse().map((entry, index) => {
+                const date = new Date(entry.date).toLocaleDateString(undefined, {
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                });
+
+                return (
+                  <div key={entry._id || index} className="bg-white rounded-3xl p-5 border border-gray-100 shadow-sm space-y-4">
+                    <div className="flex justify-between items-center pb-3 border-b border-gray-50">
+                      <div className="text-xs font-black text-gray-900">{date}</div>
+                      <div className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-xl text-sm font-black italic">
+                        {entry.totalSolved}
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4 text-center">
+                      <div>
+                        <div className="text-sm font-black text-green-600">{entry.easy}</div>
+                        <div className="text-[8px] font-black text-gray-400 uppercase">Easy</div>
+                      </div>
+                      <div>
+                        <div className="text-sm font-black text-yellow-600">{entry.medium}</div>
+                        <div className="text-[8px] font-black text-gray-400 uppercase">Medium</div>
+                      </div>
+                      <div>
+                        <div className="text-sm font-black text-red-600">{entry.hard}</div>
+                        <div className="text-[8px] font-black text-gray-400 uppercase">Hard</div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="py-12 text-center">
+                <p className="text-gray-400 font-black uppercase tracking-widest text-xs">No activity records yet</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

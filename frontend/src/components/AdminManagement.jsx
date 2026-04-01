@@ -61,61 +61,61 @@ const AdminManagement = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Column: Register Admin Form */}
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
-            <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
-              <span className="p-2 bg-indigo-100 text-indigo-600 rounded-lg mr-3">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+          <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100 sticky top-24">
+            <div className="flex items-center space-x-4 mb-8">
+              <div className="p-3 bg-indigo-600 text-white rounded-2xl shadow-lg shadow-indigo-100">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                 </svg>
-              </span>
-              Add New Admin
-            </h2>
+              </div>
+              <h2 className="text-2xl font-black text-gray-900 tracking-tight">Add Admin</h2>
+            </div>
 
             {error && (
-              <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-xl text-sm border-l-4 border-red-500 animate-pulse">
-                {error}
+              <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-2xl text-xs font-black border-l-4 border-red-500 animate-in fade-in slide-in-from-left-2 duration-300">
+                 {error}
               </div>
             )}
             
             {success && (
-              <div className="mb-4 p-3 bg-green-50 text-green-600 rounded-xl text-sm border-l-4 border-green-500">
+              <div className="mb-6 p-4 bg-green-50 text-green-600 rounded-2xl text-xs font-black border-l-4 border-green-500 animate-in fade-in slide-in-from-left-2 duration-300">
                 {success}
               </div>
             )}
 
-            <form onSubmit={handleAddAdmin} className="space-y-5">
+            <form onSubmit={handleAddAdmin} className="space-y-6">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Username</label>
+                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Username</label>
                 <input
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all"
-                  placeholder="admin_username"
+                  className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:ring-4 focus:ring-indigo-50 focus:border-indigo-500 outline-none transition-all font-bold text-gray-700"
+                  placeholder="e.g. alex_admin"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Password</label>
+                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Secure Password</label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all"
+                  className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent rounded-2xl focus:bg-white focus:ring-4 focus:ring-indigo-50 focus:border-indigo-500 outline-none transition-all font-bold text-gray-700"
                   placeholder="••••••••"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Role</label>
+                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">Access Role</label>
                 <select
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
-                  className="w-full px-4 py-2 border rounded-xl bg-white focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all"
+                  className="w-full px-5 py-4 bg-gray-50 border-2 border-transparent rounded-2xl bg-white focus:bg-white focus:ring-4 focus:ring-indigo-50 focus:border-indigo-500 outline-none transition-all font-black text-gray-700 appearance-none cursor-pointer"
                 >
-                  <option value="admin">Admin</option>
+                  <option value="admin">Standard Admin</option>
                   <option value="superadmin">Super Admin</option>
                 </select>
               </div>
@@ -123,11 +123,20 @@ const AdminManagement = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full py-3 bg-indigo-600 text-white rounded-xl font-bold shadow-lg hover:shadow-indigo-500/30 hover:bg-indigo-700 transition-all active:scale-95 ${
-                  loading ? 'opacity-70 disabled' : ''
+                className={`w-full py-5 bg-indigo-600 text-white rounded-2xl font-black shadow-2xl shadow-indigo-200 hover:bg-indigo-700 hover:-translate-y-1 transition-all active:scale-95 flex items-center justify-center space-x-2 ${
+                  loading ? 'opacity-70 cursor-not-allowed' : ''
                 }`}
               >
-                {loading ? 'Creating...' : 'Create Account'}
+                {loading ? (
+                  <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <span>Create Account</span>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </>
+                )}
               </button>
             </form>
           </div>
@@ -135,60 +144,87 @@ const AdminManagement = () => {
 
         {/* Right Column: Admins List */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
-            <div className="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
-              <h2 className="text-xl font-bold text-gray-900">Current Admins</h2>
-              <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-bold">
+          <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+            <div className="px-8 py-6 border-b border-gray-50 bg-gray-50/50 flex justify-between items-center">
+              <h2 className="text-xl font-black text-gray-900 tracking-tight">Active Team</h2>
+              <span className="px-4 py-1.5 bg-indigo-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-indigo-100">
                 {admins.length} Total
               </span>
             </div>
             
-            <div className="overflow-x-auto">
+            {/* Desktop Table View */}
+            <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left">
                 <thead>
-                  <tr className="bg-gray-50/50">
-                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Username</th>
-                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Role</th>
-                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Joined</th>
+                  <tr className="bg-white">
+                    <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">Administrator</th>
+                    <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">Permissions</th>
+                    <th className="px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-right">Join Date</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-gray-50">
                   {admins.map((admin) => (
-                    <tr key={admin._id} className="hover:bg-indigo-50/30 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap">
+                    <tr key={admin._id} className="hover:bg-indigo-50/20 transition-all group">
+                      <td className="px-8 py-6 whitespace-nowrap">
                         <div className="flex items-center">
-                          <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold">
+                          <div className="h-12 w-12 rounded-2xl bg-gradient-to-tr from-indigo-500 to-indigo-700 flex items-center justify-center text-white font-black text-xl shadow-lg ring-4 ring-white group-hover:scale-110 transition-transform">
                             {admin.username[0].toUpperCase()}
                           </div>
                           <div className="ml-4">
-                            <div className="text-sm font-bold text-gray-900">{admin.username}</div>
+                            <div className="text-base font-black text-gray-900">{admin.username}</div>
+                            <div className="text-[10px] font-bold text-gray-400 uppercase">System Identity</div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                      <td className="px-8 py-6 whitespace-nowrap text-center">
+                        <span className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest ${
                           admin.role === 'superadmin' 
-                          ? 'bg-purple-100 text-purple-700' 
-                          : 'bg-blue-100 text-blue-700'
+                          ? 'bg-purple-100 text-purple-700 shadow-sm' 
+                          : 'bg-blue-100 text-blue-700 shadow-sm'
                         }`}>
                           {admin.role}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {new Date(admin.createdAt).toLocaleDateString()}
+                      <td className="px-8 py-6 whitespace-nowrap text-right text-xs font-black text-gray-500 italic">
+                        {new Date(admin.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
                       </td>
                     </tr>
                   ))}
-                  {admins.length === 0 && (
-                    <tr>
-                      <td colSpan="3" className="px-6 py-10 text-center text-gray-500 italic">
-                        No other admins found.
-                      </td>
-                    </tr>
-                  )}
                 </tbody>
               </table>
             </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden p-4 space-y-4 bg-gray-50/50">
+              {admins.map((admin) => (
+                <div key={admin._id} className="bg-white rounded-3xl p-5 border border-gray-100 shadow-sm space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="h-12 w-12 rounded-2xl bg-indigo-600 flex items-center justify-center text-white font-black text-xl">
+                        {admin.username[0].toUpperCase()}
+                      </div>
+                      <div>
+                        <div className="text-lg font-black text-gray-900 leading-tight">{admin.username}</div>
+                        <div className="text-[10px] font-black italic text-gray-400 mt-1 uppercase">Joined {new Date(admin.createdAt).toLocaleDateString()}</div>
+                      </div>
+                    </div>
+                    <span className={`px-3 py-1 rounded-lg text-[8px] font-black uppercase tracking-widest ${
+                      admin.role === 'superadmin' 
+                      ? 'bg-purple-100 text-purple-700' 
+                      : 'bg-blue-100 text-blue-700'
+                    }`}>
+                      {admin.role}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {admins.length === 0 && (
+              <div className="px-6 py-20 text-center">
+                <p className="text-gray-400 font-black uppercase tracking-widest text-sm">No administrators found</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
