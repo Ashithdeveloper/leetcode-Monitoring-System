@@ -55,7 +55,7 @@ const StudentDetail = () => {
     return (
       <div className="flex justify-center flex-col items-center h-screen bg-gray-50 text-red-600">
         <p className="text-xl font-semibold">{error || "Student not found"}</p>
-        <Link 
+        <Link
           to="/"
           className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition"
         >
@@ -74,65 +74,87 @@ const StudentDetail = () => {
             Back to Dashboard
           </Link>
         </div>
-        
+
         {/* Student Profile Card */}
-        <div className="bg-white shadow-xl overflow-hidden rounded-3xl mb-10 border border-gray-100">
-          <div className="px-6 py-10 flex flex-col md:flex-row justify-between items-stretch md:items-center gap-8">
-            <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-6 w-full">
-              <div className="h-24 w-24 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl flex items-center justify-center text-white shadow-lg shadow-indigo-200 transform transition-transform hover:rotate-3">
-                <User size={48} strokeWidth={2.5} />
+        <div className="bg-white border border-gray-100 shadow-lg rounded-3xl p-6 md:p-8 mb-10">
+
+          <div className="flex flex-col lg:flex-row justify-between gap-8">
+
+            {/* LEFT SECTION */}
+            <div className="flex flex-col sm:flex-row gap-6 items-center sm:items-start text-center sm:text-left">
+
+              {/* Avatar */}
+              <div className="h-20 w-20 md:h-24 md:w-24 flex items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-md">
+                <User size={42} strokeWidth={2.5} />
               </div>
-              <div className="flex-1 space-y-4">
-                <div>
-                  <h3 className="text-4xl font-black text-gray-900 tracking-tight leading-none">
-                    {student.name}
-                  </h3>
-                  <div className="mt-2 text-indigo-500 font-black text-sm uppercase tracking-[0.2em]">
-                    @{student.leetcode.username}
+
+              {/* Info */}
+              <div className="space-y-3">
+
+                {/* Name */}
+                <h3 className="text-2xl md:text-3xl font-bold text-gray-900">
+                  {student.name}
+                </h3>
+
+                {/* Username */}
+                <p className="text-indigo-500 font-semibold text-sm tracking-wide">
+                  @{student.leetcode.username}
+                </p>
+
+                {/* Tags */}
+                <div className="flex flex-wrap justify-center sm:justify-start gap-2 pt-2">
+
+                  <div className="flex items-center gap-2 bg-gray-50 px-3 py-1 rounded-lg text-xs font-semibold text-gray-600">
+                    <Hash size={14} className="text-indigo-400" />
+                    {student.rollNo}
                   </div>
-                </div>
-                
-                <div className="flex flex-wrap justify-center sm:justify-start gap-2">
-                  <div className="inline-flex items-center bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-100 shadow-sm">
-                    <Hash size={14} className="mr-2 text-indigo-400" />
-                    <span className="text-xs font-black text-gray-600">{student.rollNo}</span>
+
+                  <div className="flex items-center gap-2 bg-gray-50 px-3 py-1 rounded-lg text-xs font-semibold text-gray-600">
+                    <Building2 size={14} className="text-indigo-400" />
+                    {student.dept || "N/A"}
                   </div>
-                  <div className="inline-flex items-center bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-100 shadow-sm">
-                    <Building2 size={14} className="mr-2 text-indigo-400" />
-                    <span className="text-xs font-black text-gray-600">{student.dept || 'N/A'}</span>
+
+                  <div className="flex items-center gap-2 bg-gray-50 px-3 py-1 rounded-lg text-xs font-semibold text-gray-600">
+                    <Calendar size={14} className="text-indigo-400" />
+                    Year {student.year}
                   </div>
-                  <div className="inline-flex items-center bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-100 shadow-sm">
-                    <Calendar size={14} className="mr-2 text-indigo-400" />
-                    <span className="text-xs font-black text-gray-600">Year {student.year}</span>
-                  </div>
+
                 </div>
               </div>
             </div>
-            
-            <div className="flex flex-col sm:flex-row md:flex-col lg:flex-row gap-4 w-full md:w-auto">
-              <a 
-                href={`https://leetcode.com/${student.leetcode.username}`} 
-                target="_blank" 
+
+            {/* RIGHT SECTION */}
+            <div className="flex flex-col sm:flex-row lg:flex-col gap-3 w-full lg:w-auto">
+
+              {/* LeetCode Button */}
+              <a
+                href={`https://leetcode.com/${student.leetcode.username}`}
+                target="_blank"
                 rel="noreferrer"
-                className="flex-1 md:flex-none inline-flex items-center justify-center px-8 py-4 border-2 border-indigo-50 shadow-sm text-sm font-black rounded-2xl text-indigo-600 bg-white hover:bg-indigo-50 transition-all active:scale-95 group"
+                className="flex items-center justify-center px-6 py-3 rounded-xl border border-indigo-100 text-indigo-600 font-semibold hover:bg-indigo-50 transition"
               >
-                LeetCode Profile <ExternalLink className="ml-2 h-4 w-4 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                LeetCode
+                <ExternalLink className="ml-2 h-4 w-4" />
               </a>
-              <button 
+
+              {/* Delete Button */}
+              <button
                 onClick={handleDelete}
                 disabled={deleting}
-                className="flex-1 md:flex-none inline-flex items-center justify-center px-8 py-4 border border-transparent text-sm font-black rounded-2xl text-white bg-red-500 hover:bg-red-600 shadow-xl shadow-red-100 transition-all active:scale-95 disabled:opacity-50"
+                className="flex items-center justify-center px-6 py-3 rounded-xl bg-red-500 text-white font-semibold hover:bg-red-600 transition disabled:opacity-50"
               >
                 {deleting ? (
                   <Loader2 className="animate-spin h-5 w-5" />
                 ) : (
                   <>
-                    <Trash2 className="mr-2 h-5 w-5" />
-                    Delete Student
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    Delete
                   </>
                 )}
               </button>
+
             </div>
+
           </div>
         </div>
 
