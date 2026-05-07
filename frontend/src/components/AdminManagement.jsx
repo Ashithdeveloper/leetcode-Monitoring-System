@@ -19,7 +19,10 @@ const AdminManagement = () => {
       navigate('/');
       return;
     }
+
+    
     fetchAdmins();
+
   }, [navigate]);
 
   const fetchAdmins = async () => {
