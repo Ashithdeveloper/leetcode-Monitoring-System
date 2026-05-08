@@ -20,7 +20,7 @@ const AdminManagement = () => {
       return;
     }
 
-    
+    //@ts-check
     fetchAdmins();
 
   }, [navigate]);
