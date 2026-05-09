@@ -21,6 +21,7 @@ const AdminManagement = () => {
     }
 
     //@ts-check
+    
     fetchAdmins();
 
   }, [navigate]);
