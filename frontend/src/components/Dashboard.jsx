@@ -12,20 +12,20 @@ const Dashboard = () => {
   const [filterDept, setFilterDept] = useState('All');
   const [filterYear, setFilterYear] = useState('All');
 
-  const fetchStudents = async () => {
-    try {
-      setLoading(true);
-      const response = await getStudents();
-      setStudents(response.data);
-      setLoading(false);
-    } catch (err) {
-      setError('Failed to fetch student data');
-      setLoading(false);
-      console.error("Error fetching students:", err);
-    }
-  };
-
   useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        setLoading(true);
+        const response = await getStudents();
+        setStudents(response.data);
+        setLoading(false);
+      } catch (err) {
+        // setError(err.response?.data?.message || 'Failed to fetch student data');
+        setError("Failed to fetch student data");
+        setLoading(false);
+        console.error("Error fetching students:", err);
+      }
+    };
     fetchStudents();
   }, []);
 

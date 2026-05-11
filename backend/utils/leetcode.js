@@ -14,7 +14,8 @@ export const extractUsername = (link) => {
 
 /**
  * Fetch LeetCode stats for a given username
- * Uses the public GraphQL API endpoint
+ * Uses the public GraphQL API endpoin
+ * for fetching stats
  */
 export const fetchLeetCodeStats = async (username) => {
   const query = `
