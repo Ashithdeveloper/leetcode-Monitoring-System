@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import api, { getStudents } from '../api';
+import { getStudents } from '../api';
 import { ExternalLink, UserPlus, Trophy, Users, Award, Filter, Building2, Calendar } from 'lucide-react';
 import AddStudentModal from './AddStudentModal';
 
@@ -51,7 +51,7 @@ const Dashboard = () => {
       <div className="flex justify-center flex-col items-center h-screen bg-gray-50 text-red-600">
         <p className="text-xl font-semibold">{error}</p>
         <button 
-          onClick={() => fetchStudents()}
+          // onClick={() => fetchStudents()}
           className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition"
         >
           Retry
@@ -321,7 +321,7 @@ const Dashboard = () => {
       <AddStudentModal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
-        onSuccess={fetchStudents}
+        // onSuccess={fetchStudents}
       />
     </div>
   );
