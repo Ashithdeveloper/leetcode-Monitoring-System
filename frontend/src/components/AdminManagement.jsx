@@ -29,7 +29,9 @@ const AdminManagement = () => {
   const fetchAdmins = async () => {
     try {
       const { data } = await getAdmins();
+      
       setAdmins(data);
+
     } catch (err) {
       console.error("Error fetching admins:", err);
       setError('Failed to fetch admins');

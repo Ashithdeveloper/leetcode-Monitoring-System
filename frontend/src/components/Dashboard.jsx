@@ -52,9 +52,9 @@ const Dashboard = () => {
         <p className="text-xl font-semibold">{error}</p>
         <button 
           // onClick={() => fetchStudents()}
-          className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition"
+          className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition   "
         >
-          Retry.......
+          Retry.......Retry...
 
         </button>
       </div>
