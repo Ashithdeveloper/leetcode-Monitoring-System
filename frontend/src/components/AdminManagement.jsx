@@ -49,11 +49,8 @@ const AdminManagement = () => {
   const handleAddAdmin = async (e) => {
 
     e.preventDefault();
-
     setLoading(true);
-
     setError('');
-    
     setSuccess('');
 
     try {
