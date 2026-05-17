@@ -50,6 +50,7 @@ const AdminManagement = () => {
 
     e.preventDefault();
     setLoading(true);
+
     setError('');
     setSuccess('');
 
@@ -57,6 +58,7 @@ const AdminManagement = () => {
       await registerAdmin({ username, password, role });
       setSuccess(`Admin '${username}' added successfully!`);
       setUsername('');
+      
       setPassword('');
       setRole('admin');
       fetchAdmins();
