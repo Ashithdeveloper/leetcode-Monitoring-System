@@ -18,8 +18,11 @@ const ChangePassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (password !== confirmPassword) {
+
       setError('Passwords do not match');
+      
       return;
     }
     if (password.length < 6) {
