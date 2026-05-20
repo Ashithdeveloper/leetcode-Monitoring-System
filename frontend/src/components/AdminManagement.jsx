@@ -57,13 +57,9 @@ const AdminManagement = () => {
     try {
       await registerAdmin({ username, password, role });
       setSuccess(`Admin '${username}' added successfully!`);
-      
       setUsername('');
-      
       setPassword('');
-
       setRole('admin');
-
       fetchAdmins();
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to add admin');
