@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { updatePassword } from '../api';
 
 const ChangePassword = () => {
+  //states 
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
