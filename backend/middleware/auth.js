@@ -15,6 +15,16 @@ export const protect = async (req, res, next) => {
       // Verify token
       const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret');
 
+      // Check if guest token
+      if (decoded.role === 'guest' || decoded.id === 'guest') {
+        req.user = {
+          _id: 'guest',
+          username: 'Guest User',
+          role: 'guest',
+        };
+        return next();
+      }
+
       // Get admin from the token
       req.user = await Admin.findById(decoded.id).select('-password');
 
@@ -25,12 +35,12 @@ export const protect = async (req, res, next) => {
       next();
     } catch (error) {
       console.error(error);
-      res.status(401).json({ message: 'Not authorized, token failed' });
+      return res.status(401).json({ message: 'Not authorized, token failed' });
     }
   }
 
   if (!token) {
-    res.status(401).json({ message: 'Not authorized, no token' });
+    return res.status(401).json({ message: 'Not authorized, no token' });
   }
 };
 
@@ -39,5 +49,13 @@ export const isSuperAdmin = (req, res, next) => {
     next();
   } else {
     res.status(403).json({ message: 'Not authorized, super admin only' });
+  }
+};
+
+export const requireAdmin = (req, res, next) => {
+  if (req.user && (req.user.role === 'admin' || req.user.role === 'superadmin')) {
+    next();
+  } else {
+    res.status(403).json({ message: 'Action not allowed: Guest accounts are read-only' });
   }
 };

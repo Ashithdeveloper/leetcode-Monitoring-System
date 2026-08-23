@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getStudents } from '../api';
-import { ExternalLink, UserPlus, Trophy, Users, Award, Filter, Building2, Calendar } from 'lucide-react';
+import { ExternalLink, UserPlus, Trophy, Users, Award, Filter, Building2, Calendar, Eye, ShieldAlert } from 'lucide-react';
 import AddStudentModal from './AddStudentModal';
 
 const Dashboard = () => {
@@ -11,6 +11,9 @@ const Dashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filterDept, setFilterDept] = useState('All');
   const [filterYear, setFilterYear] = useState('All');
+
+  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+  const isGuest = userInfo?.role === 'guest';
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -64,6 +67,24 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
+
+        {/* Guest Mode Banner */}
+        {isGuest && (
+          <div className="mb-6 p-4 bg-emerald-50/90 border border-emerald-200 rounded-2xl flex items-center justify-between shadow-sm animate-fade-in">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-emerald-100 text-emerald-700 rounded-xl">
+                <Eye className="w-5 h-5" />
+              </div>
+              <div>
+                <h4 className="text-sm font-black text-emerald-900">Guest Mode (Read-Only)</h4>
+                <p className="text-xs text-emerald-700 font-medium">You are viewing real-time student performance. Modifications, adding, and deleting records are restricted.</p>
+              </div>
+            </div>
+            <span className="hidden sm:inline-flex px-3 py-1 bg-emerald-200/60 text-emerald-800 text-[11px] font-black rounded-lg uppercase tracking-wider">
+              View Only
+            </span>
+          </div>
+        )}
         
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6">
@@ -74,13 +95,20 @@ const Dashboard = () => {
             </h1>
             <p className="text-sm md:text-lg text-gray-500 font-bold uppercase tracking-widest">Real-time Performance Tracking</p>
           </div>
-          <button 
-            onClick={() => setIsModalOpen(true)}
-            className="w-full md:w-auto inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-black rounded-2xl shadow-xl text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-200 transition-all transform hover:-translate-y-1 active:scale-95"
-          >
-            <UserPlus className="mr-2 h-5 w-5" />
-            Add New Student
-          </button>
+          {!isGuest ? (
+            <button 
+              onClick={() => setIsModalOpen(true)}
+              className="w-full md:w-auto inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-black rounded-2xl shadow-xl text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-200 transition-all transform hover:-translate-y-1 active:scale-95"
+            >
+              <UserPlus className="mr-2 h-5 w-5" />
+              Add New Student
+            </button>
+          ) : (
+            <div className="hidden md:flex items-center space-x-2 px-4 py-3 bg-gray-100 border border-gray-200 text-gray-500 rounded-2xl text-xs font-bold">
+              <Eye className="w-4 h-4 text-gray-400" />
+              <span>Read-Only Mode</span>
+            </div>
+          )}
         </div>
 
         {/* Filters & Actions */}

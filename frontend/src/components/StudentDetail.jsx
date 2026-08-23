@@ -27,7 +27,15 @@ const StudentDetail = () => {
     fetchStudent();
   }, [id]);
 
+  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+  const isGuest = userInfo?.role === 'guest';
+
   const handleDelete = async () => {
+    if (isGuest) {
+      alert('Guest accounts are in read-only mode and cannot delete students.');
+      return;
+    }
+
     if (!window.confirm('Are you sure you want to delete this student? All history will be lost.')) {
       return;
     }
@@ -37,7 +45,7 @@ const StudentDetail = () => {
       await deleteStudent(id);
       navigate('/');
     } catch (err) {
-      setError('Failed to delete student. You might not have permission.');
+      setError(err.response?.data?.message || 'Failed to delete student. You might not have permission.');
       setDeleting(false);
       console.error("Error deleting student:", err);
     }
@@ -137,21 +145,23 @@ const StudentDetail = () => {
                 <ExternalLink className="ml-2 h-4 w-4" />
               </a>
 
-              {/* Delete Button */}
-              <button
-                onClick={handleDelete}
-                disabled={deleting}
-                className="flex items-center justify-center px-6 py-3 rounded-xl bg-red-500 text-white font-semibold hover:bg-red-600 transition disabled:opacity-50"
-              >
-                {deleting ? (
-                  <Loader2 className="animate-spin h-5 w-5" />
-                ) : (
-                  <>
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    Delete
-                  </>
-                )}
-              </button>
+              {/* Delete Button - Only shown for Admin/SuperAdmin */}
+              {!isGuest && (
+                <button
+                  onClick={handleDelete}
+                  disabled={deleting}
+                  className="flex items-center justify-center px-6 py-3 rounded-xl bg-red-500 text-white font-semibold hover:bg-red-600 transition disabled:opacity-50"
+                >
+                  {deleting ? (
+                    <Loader2 className="animate-spin h-5 w-5" />
+                  ) : (
+                    <>
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      Delete
+                    </>
+                  )}
+                </button>
+              )}
 
             </div>
 

@@ -27,6 +27,7 @@ export const deleteStudent = (id) => api.delete(`/students/${id}`);
 
 // Auth endpoints
 export const loginAdmins = (username, password) => api.post('/auth/login', { username, password });
+export const loginGuest = () => api.post('/auth/guest');
 export const registerAdmin = (adminData) => api.post('/auth/register-admin', adminData);
 export const getAdmins = () => api.get('/auth/admins');
 export const updatePassword = (newPassword) => api.post('/auth/update-password', { newPassword });

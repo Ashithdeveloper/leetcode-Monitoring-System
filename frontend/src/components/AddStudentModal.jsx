@@ -24,6 +24,13 @@ const AddStudentModal = ({ isOpen, onClose, onSuccess }) => {
     setLoading(true);
     setError(null);
 
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    if (userInfo?.role === 'guest') {
+      setError('Guest accounts are in read-only mode and cannot add students.');
+      setLoading(false);
+      return;
+    }
+
     try {
       await addStudent(formData);
       onSuccess();
@@ -37,7 +44,7 @@ const AddStudentModal = ({ isOpen, onClose, onSuccess }) => {
         leetcodeLink: ''
       });
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to add student. Please check the details.');
+      setError(err.response?.data?.message || err.response?.data?.error || 'Failed to add student. Please check the details.');
       console.error("Error adding student:", err);
     } finally {
       setLoading(false);

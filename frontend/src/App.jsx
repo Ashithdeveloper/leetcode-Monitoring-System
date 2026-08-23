@@ -28,6 +28,8 @@ const NavBar = () => {
 
   if (!userInfo) return null;
 
+  const isGuest = userInfo.role === 'guest';
+
   return (
     <nav className="bg-white/80 backdrop-blur-xl shadow-sm sticky top-0 z-50 border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -60,7 +62,15 @@ const NavBar = () => {
           <div className="flex items-center space-x-4">
             <div className="hidden sm:flex flex-col items-end mr-2">
               <span className="text-sm font-black text-gray-900 leading-none">{userInfo.username}</span>
-              <span className="text-[10px] font-bold text-indigo-500 uppercase tracking-widest mt-1">{userInfo.role}</span>
+              {isGuest ? (
+                <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full uppercase tracking-wider mt-1">
+                  Guest (Read-Only)
+                </span>
+              ) : (
+                <span className="text-[10px] font-bold text-indigo-500 uppercase tracking-widest mt-1">
+                  {userInfo.role}
+                </span>
+              )}
             </div>
             
             <button 
@@ -92,7 +102,13 @@ const NavBar = () => {
           <div className="p-6 border-b border-gray-50 flex items-center justify-between">
             <div className="flex flex-col">
               <span className="text-lg font-black text-gray-900">{userInfo.username}</span>
-              <span className="text-[10px] font-bold text-indigo-500 uppercase tracking-widest">{userInfo.role}</span>
+              {isGuest ? (
+                <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full uppercase tracking-wider mt-1 w-max">
+                  Guest (Read-Only)
+                </span>
+              ) : (
+                <span className="text-[10px] font-bold text-indigo-500 uppercase tracking-widest">{userInfo.role}</span>
+              )}
             </div>
             <button onClick={() => setIsMenuOpen(false)} className="p-2 text-gray-400 hover:text-gray-600 rounded-lg">
               <X size={20} />

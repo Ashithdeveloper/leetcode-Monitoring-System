@@ -11,6 +11,30 @@ const generateToken = (id) => {
   });
 };
 
+// @desc    Guest login & get token
+// @route   POST /api/auth/guest
+// @access  Public
+router.post('/guest', async (req, res) => {
+  try {
+    const token = jwt.sign(
+      { id: 'guest', role: 'guest' },
+      process.env.JWT_SECRET || 'fallback_secret',
+      { expiresIn: '30d' }
+    );
+
+    res.json({
+      _id: 'guest',
+      username: 'Guest User',
+      role: 'guest',
+      mustChangePassword: false,
+      token,
+    });
+  } catch (error) {
+    console.error('Guest login error:', error);
+    res.status(500).json({ message: 'Server error during guest login' });
+  }
+});
+
 // @desc    Auth admin & get token
 // @route   POST /api/auth/login
 // @access  Public
