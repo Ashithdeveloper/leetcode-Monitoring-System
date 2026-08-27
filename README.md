@@ -9,12 +9,13 @@ An automated, modern full-stack web application designed for universities, codin
 - **⚡ Live LeetCode Sync**: Fetches real-time statistics (Total Solved, Easy, Medium, Hard breakdown) directly from LeetCode's public GraphQL API.
 - **📈 7-Day Historical Analytics**: Retains and displays rolling 7-day progress history to monitor student consistency, streak momentum, and problem-solving velocity.
 - **👥 Student & Batch Management**: Easily register students with metadata including Full Name, Roll Number, Department, Academic Year, and LeetCode Profile URL.
-- **🎯 Dynamic Filtering & Leaderboard**: Filter student records instantly by Department and Academic Year, with responsive sortable cards and metrics.
-- **🛡️ Role-Based Access Control (RBAC)**:
-  - **Super Admin**: Full administrative control, team member creation, admin credential management, and student records operations.
-  - **Admin**: Authorized access to add and manage student records and review detailed profiles.
+- **🎯 Dynamic Filtering & Leaderboard**: Instant search and filtering by Department and Academic Year, with responsive sortable cards and metrics.
+- **🛡️ Advanced Role-Based Access Control (RBAC)**:
+  - **Super Admin**: Full administrative control, team member creation, admin credential management, student recovery from Trash, and permanent record purge.
+  - **Admin**: Authorized access to add students, soft-delete students (moving to Trash with history preserved), and provision new Standard Admins (cannot create Super Admins).
   - **Guest (Read-Only)**: Instant one-click demo login enabling safe inspection of dashboards and student profiles without mutation privileges.
-- **⏰ Automated Background Cron Job**: Daily midnight scheduler that iterates through all registered students and refreshes stats with built-in rate-limit delays.
+- **♻️ Soft Delete & History Preservation**: Deleting a student preserves all past progress and metrics in a secure Trash Vault. Super Admins can recover students back to the active leaderboard anytime or permanently delete them.
+- **⏰ Automated Background Cron Job**: Daily midnight scheduler that iterates through all active students and refreshes stats with built-in rate-limit delays.
 - **💓 Keep-Alive Ping Service**: Integrated self-ping worker designed to prevent free-tier cloud instances (such as Render) from entering idle sleep mode.
 - **🎨 Modern Glassmorphic UI**: Crafted with React 19, Tailwind CSS v4, Lucide icons, and responsive layouts for desktop and mobile viewports.
 
@@ -44,7 +45,7 @@ An automated, modern full-stack web application designed for universities, codin
 ```plaintext
 leetcode-monitoring-system/
 ├── backend/
-│   ├── controllers/       # Business logic (student stats, aggregation)
+│   ├── controllers/       # Business logic (student stats, soft delete, restore)
 │   ├── jobs/              # Schedulers (Daily midnight cron, keep-alive ping)
 │   ├── middleware/        # JWT auth & role validation middleware
 │   ├── models/            # Mongoose schemas (Admin, Student)
@@ -168,15 +169,19 @@ cd "leetcode Monitoring System"
 
 ## 🔐 Role-Based Access Control (RBAC)
 
-| Feature / Action | Guest (Demo) | Admin | Super Admin |
+| Feature / Action | Guest (Demo) | Standard Admin | Super Admin |
 | :--- | :---: | :---: | :---: |
 | View Dashboard & Metrics | ✅ | ✅ | ✅ |
 | View Student Detailed Profile & History | ✅ | ✅ | ✅ |
 | Add New Student | ❌ | ✅ | ✅ |
-| Delete Student Record | ❌ | ✅ | ✅ |
-| Change Own Password | ❌ | ❌ | ✅ |
-| Create New Admin Users | ❌ | ❌ | ✅ |
-| View Admin List | ❌ | ❌ | ✅ |
+| Soft Delete Student (Move to Trash) | ❌ | ✅ | ✅ |
+| View Trash / Archive Vault | ❌ | ❌ | ✅ |
+| Recover / Restore Deleted Student | ❌ | ❌ | ✅ |
+| Permanently Delete Student | ❌ | ❌ | ✅ |
+| Create Standard Admin Users | ❌ | ✅ | ✅ |
+| Create Super Admin Users | ❌ | ❌ | ✅ |
+| View Admin List | ❌ | ✅ | ✅ |
+| Change Super Admin Password | ❌ | ❌ | ✅ |
 
 ---
 
@@ -189,17 +194,20 @@ cd "leetcode Monitoring System"
 | `POST` | `/api/auth/guest` | Public | Generate guest session token |
 | `POST` | `/api/auth/login` | Public | Authenticate admin / superadmin credentials |
 | `POST` | `/api/auth/update-password` | Private (SuperAdmin) | Update superadmin account password |
-| `POST` | `/api/auth/register-admin` | Private (SuperAdmin) | Register a new admin user |
-| `GET` | `/api/auth/admins` | Private (SuperAdmin) | List all registered admin accounts |
+| `POST` | `/api/auth/register-admin` | Private (Admin / SuperAdmin) | Register a new admin (Admins can only create Standard Admins) |
+| `GET` | `/api/auth/admins` | Private (Admin / SuperAdmin) | List all registered admin accounts |
 
 ### 👨‍🎓 Student Management Routes (`/api/students`)
 
 | Method | Endpoint | Access | Description |
 | :--- | :--- | :--- | :--- |
-| `GET` | `/api/students` | Public / Protected | Get all students with latest stats |
-| `GET` | `/api/students/:id` | Public / Protected | Get single student details & 7-day progress history |
+| `GET` | `/api/students` | Public / Protected | Get all active students with latest stats |
+| `GET` | `/api/students/deleted` | Private (SuperAdmin) | Get all soft-deleted students with deletion metadata |
+| `GET` | `/api/students/:id` | Public / Protected | Get single student details & full 7-day progress history |
 | `POST` | `/api/students/add` | Private (Admin / SuperAdmin) | Register new student & fetch initial LeetCode stats |
-| `DELETE`| `/api/students/:id` | Private (Admin / SuperAdmin) | Remove a student record and historical data |
+| `DELETE`| `/api/students/:id` | Private (Admin / SuperAdmin) | Soft delete a student (moves to Trash, preserves history) |
+| `PUT` | `/api/students/:id/restore` | Private (SuperAdmin) | Restore a soft-deleted student back to active leaderboard |
+| `DELETE`| `/api/students/:id/permanent` | Private (SuperAdmin) | Permanently erase a student record and all history |
 
 ---
 
@@ -207,7 +215,7 @@ cd "leetcode Monitoring System"
 
 ### 1. Daily LeetCode Sync (`jobs/cron.js`)
 - Runs every day at **00:00 (Midnight)**.
-- Queries MongoDB for all registered students.
+- Queries MongoDB for active registered students.
 - Fetches the latest problem metrics from LeetCode.
 - Appends to the student's 7-day history array (rolling window).
 - Implements a **2-second delay** between requests to prevent hitting LeetCode rate limits.

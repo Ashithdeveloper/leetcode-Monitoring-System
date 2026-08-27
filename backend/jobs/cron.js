@@ -10,7 +10,7 @@ const startDailyCron = () => {
   cron.schedule('0 0 * * *', async () => {
     console.log('--- Starting Daily LeetCode Stats Update ---');
     try {
-      const students = await Student.find();
+      const students = await Student.find({ isDeleted: { $ne: true } });
       console.log(`Found ${students.length} students to update.`);
 
       for (let student of students) {

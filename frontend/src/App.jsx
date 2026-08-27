@@ -7,10 +7,13 @@ import AdminManagement from './components/AdminManagement';
 import ChangePassword from './components/ChangePassword';
 import { Menu, X, LayoutDashboard, Users as UsersIcon, Lock, LogOut, Trophy } from 'lucide-react';
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ children, allowedRoles }) => {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   if (!userInfo) {
     return <Navigate to="/login" replace />;
+  }
+  if (allowedRoles && !allowedRoles.includes(userInfo.role)) {
+    return <Navigate to="/" replace />;
   }
   return children;
 };
@@ -29,6 +32,7 @@ const NavBar = () => {
   if (!userInfo) return null;
 
   const isGuest = userInfo.role === 'guest';
+  const isAdminOrSuper = userInfo.role === 'admin' || userInfo.role === 'superadmin';
 
   return (
     <nav className="bg-white/80 backdrop-blur-xl shadow-sm sticky top-0 z-50 border-b border-gray-100">
@@ -45,16 +49,16 @@ const NavBar = () => {
                 <LayoutDashboard className="w-4 h-4 mr-2" />
                 Dashboard
               </Link>
+              {isAdminOrSuper && (
+                <Link to="/admin-management" className="px-4 py-2 text-sm font-bold text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all flex items-center">
+                  <UsersIcon className="w-4 h-4 mr-2" />
+                  Teams
+                </Link>
+              )}
               {userInfo.role === 'superadmin' && (
-                <>
-                  <Link to="/admin-management" className="px-4 py-2 text-sm font-bold text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all flex items-center">
-                    <UsersIcon className="w-4 h-4 mr-2" />
-                    Teams
-                  </Link>
-                  <Link to="/change-password" title="Change Password" className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all">
-                    <Lock className="w-5 h-5" />
-                  </Link>
-                </>
+                <Link to="/change-password" title="Change Password" className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all">
+                  <Lock className="w-5 h-5" />
+                </Link>
               )}
             </div>
           </div>
@@ -75,7 +79,7 @@ const NavBar = () => {
             
             <button 
               onClick={handleLogout}
-              className="hidden md:flex p-2.5 bg-gray-50 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all shadow-sm hover:shadow-md"
+              className="hidden md:flex p-2.5 bg-gray-50 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all shadow-sm hover:shadow-md cursor-pointer"
               title="Logout"
             >
               <LogOut className="w-5 h-5" />
@@ -125,32 +129,33 @@ const NavBar = () => {
               <span>Dashboard</span>
             </Link>
             
+            {isAdminOrSuper && (
+              <Link 
+                to="/admin-management" 
+                onClick={() => setIsMenuOpen(false)}
+                className="flex items-center space-x-3 p-4 rounded-2xl text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 font-bold transition-all"
+              >
+                <UsersIcon size={20} />
+                <span>Manage Teams</span>
+              </Link>
+            )}
+
             {userInfo.role === 'superadmin' && (
-              <>
-                <Link 
-                  to="/admin-management" 
-                  onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center space-x-3 p-4 rounded-2xl text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 font-bold transition-all"
-                >
-                  <UsersIcon size={20} />
-                  <span>Manage Teams</span>
-                </Link>
-                <Link 
-                  to="/change-password" 
-                  onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center space-x-3 p-4 rounded-2xl text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 font-bold transition-all"
-                >
-                  <Lock size={20} />
-                  <span>Security</span>
-                </Link>
-              </>
+              <Link 
+                to="/change-password" 
+                onClick={() => setIsMenuOpen(false)}
+                className="flex items-center space-x-3 p-4 rounded-2xl text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 font-bold transition-all"
+              >
+                <Lock size={20} />
+                <span>Security</span>
+              </Link>
             )}
           </div>
 
           <div className="p-6 border-t border-gray-50">
             <button 
               onClick={handleLogout}
-              className="w-full flex items-center justify-center space-x-2 py-4 bg-red-50 text-red-600 rounded-2xl font-black hover:bg-red-100 transition-all active:scale-95 shadow-sm"
+              className="w-full flex items-center justify-center space-x-2 py-4 bg-red-50 text-red-600 rounded-2xl font-black hover:bg-red-100 transition-all active:scale-95 shadow-sm cursor-pointer"
             >
               <LogOut size={20} />
               <span>Sign Out</span>
@@ -182,17 +187,13 @@ function App() {
               </ProtectedRoute>
             } />
             <Route path="/admin-management" element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={['admin', 'superadmin']}>
                 <AdminManagement />
               </ProtectedRoute>
             } />
             <Route path="/change-password" element={
-              <ProtectedRoute>
-                {JSON.parse(localStorage.getItem('userInfo'))?.role === 'superadmin' ? (
-                  <ChangePassword />
-                ) : (
-                  <Navigate to="/" replace />
-                )}
+              <ProtectedRoute allowedRoles={['superadmin']}>
+                <ChangePassword />
               </ProtectedRoute>
             } />
             <Route path="*" element={<Navigate to="/" replace />} />

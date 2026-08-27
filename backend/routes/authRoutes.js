@@ -1,7 +1,7 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import Admin from '../models/Admin.js';
-import { protect, isSuperAdmin } from '../middleware/auth.js';
+import { protect, isSuperAdmin, requireAdmin } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -62,7 +62,7 @@ router.post('/login', async (req, res) => {
 
 // @desc    Update admin password
 // @route   POST /api/auth/update-password
-// @access  Private
+// @access  Private (SuperAdmin only)
 router.post('/update-password', protect, isSuperAdmin, async (req, res) => {
   const { newPassword } = req.body;
 
@@ -84,21 +84,27 @@ router.post('/update-password', protect, isSuperAdmin, async (req, res) => {
 
 // @desc    Register a new admin
 // @route   POST /api/auth/register-admin
-// @access  Private/SuperAdmin
-router.post('/register-admin', protect, isSuperAdmin, async (req, res) => {
+// @access  Private (Admin / SuperAdmin)
+router.post('/register-admin', protect, requireAdmin, async (req, res) => {
   const { username, password, role } = req.body;
 
   try {
+    if (req.user.role === 'admin' && role === 'superadmin') {
+      return res.status(403).json({ message: 'Standard Admins are not permitted to create Super Admin accounts.' });
+    }
+
+    const assignedRole = req.user.role === 'superadmin' ? (role || 'admin') : 'admin';
+
     const adminExists = await Admin.findOne({ username });
 
     if (adminExists) {
-      return res.status(400).json({ message: 'Admin already exists' });
+      return res.status(400).json({ message: 'Admin with this username already exists' });
     }
 
     const admin = await Admin.create({
       username,
       password,
-      role: role || 'admin',
+      role: assignedRole,
     });
 
     if (admin) {
@@ -111,19 +117,19 @@ router.post('/register-admin', protect, isSuperAdmin, async (req, res) => {
       res.status(400).json({ message: 'Invalid admin data' });
     }
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server error registering admin' });
   }
 });
 
 // @desc    Get all admins
 // @route   GET /api/auth/admins
-// @access  Private/SuperAdmin
-router.get('/admins', protect, isSuperAdmin, async (req, res) => {
+// @access  Private (Admin / SuperAdmin)
+router.get('/admins', protect, requireAdmin, async (req, res) => {
   try {
     const admins = await Admin.find({}).select('-password');
     res.json(admins);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server error retrieving admins' });
   }
 });
 

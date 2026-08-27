@@ -18,6 +18,11 @@ export const addStudent = async (req, res) => {
     // Check if student already exists
     const existingStudent = await Student.findOne({ rollNo });
     if (existingStudent) {
+      if (existingStudent.isDeleted) {
+        return res.status(400).json({ 
+          error: 'A student with this roll number is in the Trash. A Super Admin can recover or permanently delete it.' 
+        });
+      }
       return res.status(400).json({ error: 'Student with this roll number already exists' });
     }
 
@@ -28,7 +33,6 @@ export const addStudent = async (req, res) => {
     }
 
     // Handle standard generic profile URLs like /u/username or /username
-    // Leetcode link might be just username or full URL
     if (username === 'u') { // Edge case: trailing slash on root
       username = extractUsername(leetcodeLink.slice(0, -2)); 
     }
@@ -43,6 +47,7 @@ export const addStudent = async (req, res) => {
       year,
       dept,
       leetcode: { username },
+      isDeleted: false,
       history: [stats]
     });
 
@@ -58,16 +63,15 @@ export const addStudent = async (req, res) => {
 };
 
 /**
- * Get all students
+ * Get all active students
  * Returns basic info and the latest stats (last item in history)
  */
 export const getAllStudents = async (req, res) => {
   try {
-    const students = await Student.find().lean();
+    const students = await Student.find({ isDeleted: { $ne: true } }).lean();
     
     // Process to return only latest stats
     const processedStudents = students.map(student => {
-      // The last element in the history array represents the latest stats (or null if empty)
       const latestStats = student.history && student.history.length > 0
         ? student.history[student.history.length - 1]
         : null;
@@ -78,8 +82,9 @@ export const getAllStudents = async (req, res) => {
         rollNo: student.rollNo,
         year: student.year,
         dept: student.dept,
-        leetcodeUsername: student.leetcode.username,
-        latestStats: latestStats
+        leetcodeUsername: student.leetcode?.username,
+        latestStats: latestStats,
+        isDeleted: false
       };
     });
 
@@ -87,6 +92,40 @@ export const getAllStudents = async (req, res) => {
   } catch (error) {
     console.error('Error fetching students:', error);
     res.status(500).json({ error: 'Server error retrieving students' });
+  }
+};
+
+/**
+ * Get all soft-deleted students (Trash / Archive)
+ * Super Admin only
+ */
+export const getDeletedStudents = async (req, res) => {
+  try {
+    const students = await Student.find({ isDeleted: true }).lean();
+
+    const processedStudents = students.map(student => {
+      const latestStats = student.history && student.history.length > 0
+        ? student.history[student.history.length - 1]
+        : null;
+
+      return {
+        _id: student._id,
+        name: student.name,
+        rollNo: student.rollNo,
+        year: student.year,
+        dept: student.dept,
+        leetcodeUsername: student.leetcode?.username,
+        latestStats: latestStats,
+        isDeleted: true,
+        deletedAt: student.deletedAt,
+        deletedBy: student.deletedBy
+      };
+    });
+
+    res.status(200).json(processedStudents);
+  } catch (error) {
+    console.error('Error fetching deleted students:', error);
+    res.status(500).json({ error: 'Server error retrieving deleted students' });
   }
 };
 
@@ -111,9 +150,70 @@ export const getStudentById = async (req, res) => {
 };
 
 /**
- * Delete a student
+ * Soft delete a student
+ * Preserves history and flags isDeleted: true
  */
 export const deleteStudent = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const student = await Student.findById(id);
+    if (!student) {
+      return res.status(404).json({ error: 'Student not found' });
+    }
+
+    if (student.isDeleted) {
+      return res.status(400).json({ error: 'Student is already in trash' });
+    }
+
+    student.isDeleted = true;
+    student.deletedAt = new Date();
+    student.deletedBy = req.user?.username || 'admin';
+
+    await student.save();
+
+    res.status(200).json({ message: 'Student moved to trash successfully', student });
+  } catch (error) {
+    console.error(`Error deleting student ${id}:`, error);
+    res.status(500).json({ error: 'Server error deleting student' });
+  }
+};
+
+/**
+ * Restore a soft-deleted student
+ * Super Admin only
+ */
+export const restoreStudent = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const student = await Student.findById(id);
+    if (!student) {
+      return res.status(404).json({ error: 'Student not found' });
+    }
+
+    if (!student.isDeleted) {
+      return res.status(400).json({ error: 'Student is already active' });
+    }
+
+    student.isDeleted = false;
+    student.deletedAt = null;
+    student.deletedBy = null;
+
+    await student.save();
+
+    res.status(200).json({ message: 'Student restored successfully', student });
+  } catch (error) {
+    console.error(`Error restoring student ${id}:`, error);
+    res.status(500).json({ error: 'Server error restoring student' });
+  }
+};
+
+/**
+ * Permanently delete a student
+ * Super Admin only
+ */
+export const permanentDeleteStudent = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -122,9 +222,9 @@ export const deleteStudent = async (req, res) => {
       return res.status(404).json({ error: 'Student not found' });
     }
 
-    res.status(200).json({ message: 'Student deleted successfully' });
+    res.status(200).json({ message: 'Student permanently deleted' });
   } catch (error) {
-    console.error(`Error deleting student ${id}:`, error);
-    res.status(500).json({ error: 'Server error deleting student' });
+    console.error(`Error permanently deleting student ${id}:`, error);
+    res.status(500).json({ error: 'Server error deleting student permanently' });
   }
 };

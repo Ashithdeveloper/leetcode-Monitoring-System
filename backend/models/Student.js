@@ -16,7 +16,11 @@ const StudentSchema = new mongoose.Schema({
   leetcode: {
     username: { type: String, required: true }
   },
+  isDeleted: { type: Boolean, default: false },
+  deletedAt: { type: Date, default: null },
+  deletedBy: { type: String, default: null },
   history: [HistorySchema]
 }, { timestamps: true });
 
 export default mongoose.model('Student', StudentSchema);
+
