@@ -1,9 +1,6 @@
 import axios from 'axios';
 
-/**
- * Extract username from LeetCode profile link
- * Example: https://leetcode.com/u/user123/ -> user123
- */
+
 export const extractUsername = (link) => {
   if (!link) return null;
   // Remove trailing slashes
@@ -14,7 +11,7 @@ export const extractUsername = (link) => {
 
 /**
  * Fetch LeetCode stats for a given username
- * Uses the public GraphQL API endpoin
+ * Uses the public GraphQL API endpoint
 
  */
 export const fetchLeetCodeStats = async (username) => {
