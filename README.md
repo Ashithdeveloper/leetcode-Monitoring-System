@@ -9,15 +9,31 @@ An automated, modern full-stack web application designed for universities, codin
 - **⚡ Live LeetCode Sync**: Fetches real-time statistics (Total Solved, Easy, Medium, Hard breakdown) directly from LeetCode's public GraphQL API.
 - **📈 7-Day Historical Analytics**: Retains and displays rolling 7-day progress history to monitor student consistency, streak momentum, and problem-solving velocity.
 - **👥 Student & Batch Management**: Easily register students with metadata including Full Name, Roll Number, Department, Academic Year, and LeetCode Profile URL.
-- **🎯 Dynamic Filtering & Leaderboard**: Instant search and filtering by Department and Academic Year, with responsive sortable cards and metrics.
+- **🎯 Dynamic Filtering & Search**: Instant search by student name, roll number, or username, plus department and academic year filtering with responsive sorting.
 - **🛡️ Advanced Role-Based Access Control (RBAC)**:
-  - **Super Admin**: Full administrative control, team member creation, admin credential management, student recovery from Trash, and permanent record purge.
+  - **Super Admin**: Full administrative control, team member creation, admin credential management, student recovery from Trash Vault, and permanent record purge.
   - **Admin**: Authorized access to add students, soft-delete students (moving to Trash with history preserved), and provision new Standard Admins (cannot create Super Admins).
   - **Guest (Read-Only)**: Instant one-click demo login enabling safe inspection of dashboards and student profiles without mutation privileges.
-- **♻️ Soft Delete & History Preservation**: Deleting a student preserves all past progress and metrics in a secure Trash Vault. Super Admins can recover students back to the active leaderboard anytime or permanently delete them.
+- **♻️ Soft Delete & History Preservation**: Deleting a student preserves all past progress and metrics in a secure Trash Vault. Super Admins can recover students back to the active leaderboard anytime or permanently erase them.
 - **⏰ Automated Background Cron Job**: Daily midnight scheduler that iterates through all active students and refreshes stats with built-in rate-limit delays.
 - **💓 Keep-Alive Ping Service**: Integrated self-ping worker designed to prevent free-tier cloud instances (such as Render) from entering idle sleep mode.
 - **🎨 Modern Glassmorphic UI**: Crafted with React 19, Tailwind CSS v4, Lucide icons, and responsive layouts for desktop and mobile viewports.
+
+---
+
+## 🧪 Default Testing Credentials
+
+For quick evaluation and application testing, default credentials are pre-configured:
+
+| Parameter | Value |
+| :--- | :--- |
+| **Username** | `Devtesting` |
+| **Password** | `123456789` |
+| **Role** | `Standard Admin` (Student management & team view) |
+| **Guest Access** | One-click **"Continue as Guest (View Only)"** button on the Login page |
+
+> [!TIP]
+> The login page inputs are pre-filled with the testing credentials by default for rapid demonstration.
 
 ---
 

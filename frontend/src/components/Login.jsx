@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginAdmins, loginGuest } from '../api';
-import { Eye, Shield, Sparkles } from 'lucide-react';
+import { Eye, Shield, Sparkles, FlaskConical, X, CheckCircle, Info } from 'lucide-react';
 
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('Devtesting');
+  const [password, setPassword] = useState('123456789');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [guestLoading, setGuestLoading] = useState(false);
+  const [showTestPopup, setShowTestPopup] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -59,9 +60,66 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-4 relative">
+      
+      {/* Testing Notice Pop-up Modal */}
+      {showTestPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-8 border border-indigo-100 relative transform transition-all animate-in zoom-in-95 duration-200">
+            <button 
+              onClick={() => setShowTestPopup(false)}
+              className="absolute top-5 right-5 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition cursor-pointer"
+              title="Close notice"
+            >
+              <X size={18} />
+            </button>
+
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="p-3 bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-2xl shadow-lg shadow-indigo-100">
+                <FlaskConical className="w-6 h-6" />
+              </div>
+              <div>
+                <span className="px-2.5 py-0.5 bg-indigo-50 text-indigo-700 rounded-full text-[10px] font-black uppercase tracking-wider">
+                  Testing Notice
+                </span>
+                <h2 className="text-xl font-black text-gray-900 tracking-tight">Application Demo Mode</h2>
+              </div>
+            </div>
+
+            <p className="text-sm text-gray-600 leading-relaxed mb-5 font-medium">
+              This login account (<span className="font-black text-indigo-600">Devtesting</span>) is provided default for understanding and testing all features of the application.
+            </p>
+
+            <div className="bg-indigo-50/70 border border-indigo-100/80 rounded-2xl p-4 mb-6 space-y-2">
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-gray-500 font-bold uppercase tracking-wider text-[10px]">Testing Username:</span>
+                <span className="font-mono font-black text-indigo-900 bg-white px-2.5 py-0.5 rounded-lg border border-indigo-100">Devtesting</span>
+              </div>
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-gray-500 font-bold uppercase tracking-wider text-[10px]">Testing Password:</span>
+                <span className="font-mono font-black text-indigo-900 bg-white px-2.5 py-0.5 rounded-lg border border-indigo-100">123456789</span>
+              </div>
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-gray-500 font-bold uppercase tracking-wider text-[10px]">Access Level:</span>
+                <span className="font-bold text-indigo-700 bg-indigo-50 px-2.5 py-0.5 rounded-lg border border-indigo-200 text-[11px]">Standard Admin</span>
+              </div>
+            </div>
+
+            <div className="flex space-x-3">
+              <button
+                onClick={() => setShowTestPopup(false)}
+                className="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-2xl font-black text-sm shadow-xl shadow-indigo-100 active:scale-95 transition cursor-pointer flex items-center justify-center space-x-2"
+              >
+                <span>Proceed to Login</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Main Login Card */}
       <div className="bg-white/95 backdrop-blur-md p-8 rounded-3xl shadow-2xl w-full max-w-md border border-white/20 transform transition-all">
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <div className="inline-flex p-3 bg-indigo-50 rounded-2xl text-indigo-600 mb-3 shadow-inner">
             <Sparkles className="w-8 h-8" />
           </div>
@@ -69,6 +127,26 @@ const Login = () => {
             LeetTracker
           </h1>
           <p className="text-gray-500 text-sm mt-1 font-medium">Student Performance & Leaderboard System</p>
+        </div>
+
+        {/* Informative Testing Banner on Card */}
+        <div 
+          onClick={() => setShowTestPopup(true)}
+          className="mb-6 p-3 bg-indigo-50/90 hover:bg-indigo-100/90 border border-indigo-100 rounded-2xl flex items-center justify-between cursor-pointer transition active:scale-98 group"
+          title="Click to view testing info"
+        >
+          <div className="flex items-center space-x-2.5">
+            <div className="p-1.5 bg-indigo-600 text-white rounded-xl">
+              <FlaskConical className="w-4 h-4" />
+            </div>
+            <div className="text-left">
+              <p className="text-[11px] font-black text-indigo-900 leading-tight">Testing Mode Active</p>
+              <p className="text-[10px] font-semibold text-indigo-600">Pre-filled credentials for testing</p>
+            </div>
+          </div>
+          <span className="text-[10px] font-black text-indigo-700 bg-white px-2 py-1 rounded-lg border border-indigo-100 shadow-2xs group-hover:bg-indigo-600 group-hover:text-white transition">
+            Info
+          </span>
         </div>
 
         {error && (
@@ -105,7 +183,7 @@ const Login = () => {
           <button
             type="submit"
             disabled={loading || guestLoading}
-            className={`w-full py-3.5 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-bold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:-translate-y-0.5 transition-all active:scale-95 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+            className={`w-full py-3.5 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-bold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:-translate-y-0.5 transition-all active:scale-95 cursor-pointer ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
           >
             {loading ? (
               <span className="flex items-center justify-center">
@@ -137,7 +215,7 @@ const Login = () => {
             type="button"
             onClick={handleGuestLogin}
             disabled={loading || guestLoading}
-            className="w-full py-3.5 px-4 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-xl font-bold transition-all flex items-center justify-center space-x-2 shadow-sm hover:shadow active:scale-95 disabled:opacity-50"
+            className="w-full py-3.5 px-4 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-xl font-bold transition-all flex items-center justify-center space-x-2 shadow-sm hover:shadow active:scale-95 disabled:opacity-50 cursor-pointer"
           >
             {guestLoading ? (
               <span className="flex items-center justify-center">
@@ -154,7 +232,7 @@ const Login = () => {
               </>
             )}
           </button>
-          
+
           <div className="flex items-center justify-center space-x-1.5 text-[11px] text-gray-400 font-medium text-center">
             <Shield className="w-3.5 h-3.5 text-gray-400" />
             <span>Read-only access to view leaderboards and metrics</span>

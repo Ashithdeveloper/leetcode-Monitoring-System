@@ -29,41 +29,41 @@ if (!mongoURI) {
 }
 
 mongoose.connect(mongoURI)
-.then(async () => {
-  console.log('Connected to MongoDB');
-  // Seed initial super admin if none exist
-  const adminCount = await Admin.countDocuments();
-  if (adminCount === 0) {
-    const username = process.env.SUPERADMIN_USERNAME;
-    const password = process.env.SUPERADMIN_PASSWORD;
+  .then(async () => {
+    console.log('Connected to MongoDB');
+    // Seed initial super admin if none exist
+    const adminCount = await Admin.countDocuments();
+    if (adminCount === 0) {
+      const username = process.env.SUPERADMIN_USERNAME;
+      const password = process.env.SUPERADMIN_PASSWORD;
 
-    if (username && password) {
-      const superAdmin = await Admin.create({
-        username,
-        password,
-        role: 'superadmin',
-        mustChangePassword: true,
-      });
-      console.log(`Seed: Initial Super Admin '${username}' created from .env`);
-    } else {
-      console.warn('Seed: Skipping admin creation. SUPERADMIN_USERNAME or SUPERADMIN_PASSWORD missing in .env');
+      if (username && password) {
+        const superAdmin = await Admin.create({
+          username,
+          password,
+          role: 'superadmin',
+          mustChangePassword: true,
+        });
+        console.log(`Seed: Initial Super Admin '${username}' created from .env`);
+      } else {
+        console.warn('Seed: Skipping admin creation. SUPERADMIN_USERNAME or SUPERADMIN_PASSWORD missing in .env');
+      }
     }
-  }
-  
-  // Start the daily cron job after successful DB connection
-  startDailyCron();
-  
-  // Start the keep-alive ping job
-  startPingJob();
-  
-  // Start Express server
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+
+    // Start the daily cron job after successful DB connection
+    startDailyCron();
+
+    // Start the keep-alive ping job
+    startPingJob();
+
+    // Start Express server
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  })
+  .catch(err => {
+    console.error('MongoDB connection error:', err.message);
+    process.exit(1);
   });
-})
-.catch(err => {
-  console.error('MongoDB connection error:', err.message);
-  process.exit(1);
-});
 
 export default app; // Export for testing purposes
