@@ -9,7 +9,7 @@ const ChangePassword = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
- //for handling change password
+
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     if (!userInfo || userInfo.role !== 'superadmin') {
